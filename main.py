@@ -9,14 +9,14 @@ def validacion_mensaje():
         mensaje = input("Coloque el mensaje, por favor: ")
         if mensaje.strip() == "":
             print("El mensaje no puede estar vacío. Por favor, inténtelo de nuevo.")
+        elif any(char.isdigit() for char in mensaje):
+            print("El mensaje no puede contener números. Por favor, inténtelo de nuevo.")
         else:
             return mensaje
 
 def calcular_mcd(x, y):
     while y != 0:
-        temp = y
-        y = x % y
-        x = temp
+        x, y = y, x % y
     return x
 
 def hallar_d(functEuler):
@@ -58,13 +58,13 @@ def congruencia_lineal(a, b, n):
 def tabla_equivalencia(letra):
     letra = letra.upper()
     if letra < "A" or letra > "Z":
-        return "Fuera de rango"
+        raise ValueError("Fuera de rango")
     return ord(letra) - ord("A")
 
 def tabla_inversa(numero):
     numero = numero % 26
     if numero < 0 or numero > 25:
-        return "Fuera de rango"
+        raise ValueError("Fuera de rango")
     letra = chr(numero + ord("A"))
     return letra
 
@@ -94,7 +94,7 @@ def cifrar():
     e = congruencia_lineal(d, 1, euler)
     C = []
     for caracter in mensaje:
-        elemento_push = congruencia_lineal(1, tabla_equivalencia(caracter) ** e, n)
+        elemento_push = pow(tabla_equivalencia(caracter), e, n)  # Cambio: pow para exponenciación modular
         C.append(tabla_inversa(elemento_push))
     return ''.join(C)
 
@@ -109,7 +109,7 @@ def descifrar():
     d = hallar_d(euler)
     M = []
     for caracter in mensaje:
-        elemento_push = congruencia_lineal(1, tabla_equivalencia(caracter) ** d, n)
+        elemento_push = pow(tabla_equivalencia(caracter), d, n)  # Cambio: pow para exponenciación modular
         M.append(tabla_inversa(elemento_push))
     return ''.join(M)
 
